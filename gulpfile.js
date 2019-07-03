@@ -19,6 +19,7 @@ const gulp = require('gulp'),
         './src/img/**/*.svg'
       ];
 
+
 function htmlProd(){
     return gulp.src('./src/*.html')
             .pipe(htmlMin({
@@ -43,6 +44,7 @@ function cssProd(){
             }))
             .pipe(gulp.dest('./dist/css'))
 }
+
 function jsProd(){
     return gulp.src('./src/js/**/*.js')
            .pipe(concat('script.js'))
@@ -81,7 +83,6 @@ function clear(){
 	return del('./dist/*');
 }
 
-
 function watch(){
     browserSync.init({
         server: "./src"
@@ -93,7 +94,6 @@ function watch(){
     gulp.watch('./src/img/**/*').on('change', browserSync.reload),
     gulp.watch('./src/fonts/**/*').on('change', browserSync.reload);
 }
-
 
 function stylusCompiler() {
     return gulp.src('./src/css/style.styl')
