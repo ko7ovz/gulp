@@ -12,12 +12,14 @@ const gulp = require('gulp'),
       htmlMin = require('gulp-htmlmin'),
       del = require('del'),
       sourceMaps = require('gulp-sourcemaps'),
+      smartGrid = require('smart-grid'),
       images = [
         './src/img/**/*.jpg',
         './src/img/**/*.gif',
         './src/img/**/*.png',
         './src/img/**/*.svg'
       ];
+
 
 
 function html(){
@@ -88,11 +90,12 @@ function watch(){
         server: "./src"
     });
 
-    gulp.watch('./src/*.html').on('change', browserSync.reload),
-    gulp.watch('./src/css/**/*.styl').on('change', gulp.series(stylusCompiler, browserSync.reload)),
-    gulp.watch('./src/js/**/*.js').on('change', browserSync.reload),
-    gulp.watch('./src/img/**/*').on('change', browserSync.reload),
+    gulp.watch('./src/*.html').on('change', browserSync.reload);
+    gulp.watch('./src/css/**/*.styl').on('change', gulp.series(stylusCompiler, browserSync.reload));
+    gulp.watch('./src/js/**/*.js').on('change', browserSync.reload);
+    gulp.watch('./src/img/**/*').on('change', browserSync.reload);
     gulp.watch('./src/fonts/**/*').on('change', browserSync.reload);
+    gulp.watch('./smartgrid.js').on('change', grid);
 }
 
 function stylusCompiler() {
@@ -106,6 +109,15 @@ function stylusCompiler() {
 }
 
 
-gulp.task('build',gulp.series(clear, gulp.parallel(html, css, js, img, fonts))),
-gulp.task('clear', clear),
+
+function grid(done){
+    delete require.cache[require.resolve('./smartgrid.js')];
+    let settings = require('./smartgrid.js');
+    smartGrid('./src/css', settings);
+    done();
+}
+
+gulp.task('build',gulp.series(clear, gulp.parallel(html, css, js, img, fonts)));
+gulp.task('clear', clear);
 gulp.task('dev', watch);
+gulp.task('grid', grid);
